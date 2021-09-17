@@ -60,6 +60,8 @@ int main(int argc, char * argv[]) {
 	// close handle
 	CloseHandle(hProcess);
 
+	printf_s("Injected \"%s\" to \"%s\" (PID: %d) successfully", dllPath, argv[1], dwProcess);
+
 	// done
 	return 0;
 }
