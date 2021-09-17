@@ -17,33 +17,42 @@ DWORD getProcess(char* processName) {
 	} while (Process32Next(hPID, &procEntry));
 }
 
-int main() {
-	// declare variables
-	char process[MAX_PATH];
-	char dll[MAX_PATH];
-
+int main(int argc, char * argv[]) {
 	DWORD dwProcess;
-	char myDLL[MAX_PATH];
+	char dllPath[MAX_PATH];
 
-	// ask for input
-	printf("process: ");
-	scanf_s("%259s", process, MAX_PATH - 1);
-
-	printf("dll: ");
-	scanf_s("%259s", dll, MAX_PATH - 1);
+	if (argc != 3)
+	{
+		printf_s("Bad Args");
+		return -1;
+	}
 
 	// get path of DLL
-	GetFullPathNameA(dll, MAX_PATH, myDLL, NULL);
+	GetFullPathNameA(argv[2], MAX_PATH, dllPath, NULL);
+	printf_s("Got dll path: \"%s\"\n", dllPath);
 
 	// get process
-	dwProcess = getProcess(process);
+	dwProcess = getProcess(argv[1]);
+	printf_s("Got processid: %d\n", dwProcess);
 
 	// open handle and allocate memory
 	HANDLE hProcess = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_VM_WRITE | PROCESS_VM_OPERATION, FALSE, dwProcess);
-	LPVOID allocatedMem = VirtualAllocEx(hProcess, NULL, sizeof(myDLL), MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+
+	if (!hProcess)
+	{
+		printf_s("Failed to open injectee.\n");
+		return -1;
+	}
+
+	LPVOID allocatedMem = VirtualAllocEx(hProcess, NULL, sizeof(dllPath), MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+	if (!allocatedMem)
+	{
+		printf_s("Failed to allocate memory in injectee.\n");
+		return -1;
+	}
 
 	// actually "inject" DLL into process memory
-	WriteProcessMemory(hProcess, allocatedMem, myDLL, sizeof(myDLL), NULL);
+	WriteProcessMemory(hProcess, allocatedMem, dllPath, sizeof(dllPath), NULL);
 
 	// launch DLL
 	CreateRemoteThread(hProcess, 0, 0, (LPTHREAD_START_ROUTINE)LoadLibrary, allocatedMem, 0, 0);
