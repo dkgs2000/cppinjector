@@ -2,7 +2,7 @@
 #include "pch.h"
 #include "BrainFunctions.h"
 
-BOOL InitilizeBrain(void);
+#define MESSAGE_BUFFER_SIZE 1024
 
 enum Functions
 {
@@ -13,5 +13,12 @@ enum Functions
 struct BrainMessage
 {
     DWORD function;
-    BYTE parametersBuffer;
+    BYTE parametersBuffer[MESSAGE_BUFFER_SIZE - sizeof(function)];
 };
+
+struct BrainAnswer
+{
+    DWORD function_return_value;
+};
+
+BOOL InitilizeBrain(void);

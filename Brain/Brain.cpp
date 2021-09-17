@@ -1,30 +1,44 @@
 #include "pch.h"
-#include"Brain.h"
+#include "Brain.h"
 
 VOID BrainMain(HANDLE hPipe)
 {
-    BYTE buffer[1024] = { 0 };
+    BYTE input_buffer[MESSAGE_BUFFER_SIZE] = {};
+    BrainMessage* brain_message = (BrainMessage*)input_buffer;
+    BYTE* parameters_buffer = NULL;
+    BYTE answer_buffer[sizeof(BrainAnswer)] = {};
     DWORD dwRead = 0;
 
     while (hPipe != INVALID_HANDLE_VALUE)
     {
         if (ConnectNamedPipe(hPipe, NULL) != FALSE)   // wait for someone to connect to the pipe
         {
-            RtlZeroMemory(buffer, sizeof(buffer));
-
-            while (ReadFile(hPipe, buffer, sizeof(buffer) - 1, &dwRead, NULL) != FALSE)
+            while (ReadFile(hPipe, input_buffer, sizeof(input_buffer) - 1, &dwRead, NULL) != FALSE)
             {
-                switch (((BrainMessage*)buffer)->function)
+                parameters_buffer = (BYTE*)VirtualAlloc(NULL, sizeof(brain_message->parametersBuffer), MEM_COMMIT | MEM_RESERVE, NULL);
+                if (parameters_buffer == NULL)
+                {
+                    OutputDebugString(L"[-] Failed to allocate parameters buffer.\n");
+                    continue;
+                }
+
+                switch (brain_message->function)
                 {
                 case LOAD_DLL_FUNCTION:
+                    BrainLoadDll(parameters_buffer);
                     break;
 
                 case PRINT_STRING_FUNCTION:
-                    BrainPrintString(((BrainMessage*)buffer)->parametersBuffer);
+                    BrainPrintString(parameters_buffer);
                     break;
+
                 default:
+                    OutputDebugString(L"[!] Got unknown function in message.\n");
                     break;
                 }
+
+                VirtualFree(parameters_buffer, 0, MEM_RELEASE);
+                RtlZeroMemory(input_buffer, sizeof(input_buffer));
             }
         }
 
@@ -55,7 +69,9 @@ BOOL InitilizeBrain(void)
         hPipe,
         0,
         NULL))
+    {
         return FALSE;
+    }
 
 	return TRUE;
 }

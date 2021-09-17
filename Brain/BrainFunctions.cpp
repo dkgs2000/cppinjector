@@ -14,3 +14,8 @@ DWORD BrainPrintString(BYTE* input_buffer)
     OutputDebugString((LPWSTR)unicode_buffer);
     return 0;
 }
+
+DWORD BrainLoadDll(BYTE* input_buffer)
+{
+    return 0;
+}
