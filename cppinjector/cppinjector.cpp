@@ -23,31 +23,29 @@ int main(int argc, char * argv[]) {
 
 	if (argc != 3)
 	{
-		printf_s("Bad Args");
+		printf_s("[-] Bad Args");
 		return -1;
 	}
 
 	// get path of DLL
 	GetFullPathNameA(argv[2], MAX_PATH, dllPath, NULL);
-	printf_s("Got dll path: \"%s\"\n", dllPath);
 
 	// get process
 	dwProcess = getProcess(argv[1]);
-	printf_s("Got processid: %d\n", dwProcess);
 
 	// open handle and allocate memory
 	HANDLE hProcess = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_VM_WRITE | PROCESS_VM_OPERATION, FALSE, dwProcess);
 
 	if (!hProcess)
 	{
-		printf_s("Failed to open injectee.\n");
+		printf_s("[-] Failed to open injectee.\n");
 		return -1;
 	}
 
 	LPVOID allocatedMem = VirtualAllocEx(hProcess, NULL, sizeof(dllPath), MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 	if (!allocatedMem)
 	{
-		printf_s("Failed to allocate memory in injectee.\n");
+		printf_s("[-] Failed to allocate memory in injectee.\n");
 		return -1;
 	}
 
@@ -60,7 +58,7 @@ int main(int argc, char * argv[]) {
 	// close handle
 	CloseHandle(hProcess);
 
-	printf_s("Injected \"%s\" to \"%s\" (PID: %d) successfully", dllPath, argv[1], dwProcess);
+	printf_s("[+] Injected \"%s\" to \"%s\" (PID: %d) successfully", dllPath, argv[1], dwProcess);
 
 	// done
 	return 0;

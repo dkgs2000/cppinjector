@@ -1,30 +1,30 @@
 #include "pch.h"
+#include"Brain.h"
 
 VOID BrainMain(HANDLE hPipe)
 {
-    BYTE buffer[1024];
-    DWORD dwRead;
-    
-    BYTE temp_unicode_buffer[2048] = { 0 };
+    BYTE buffer[1024] = { 0 };
+    DWORD dwRead = 0;
 
     while (hPipe != INVALID_HANDLE_VALUE)
     {
         if (ConnectNamedPipe(hPipe, NULL) != FALSE)   // wait for someone to connect to the pipe
         {
+            RtlZeroMemory(buffer, sizeof(buffer));
+
             while (ReadFile(hPipe, buffer, sizeof(buffer) - 1, &dwRead, NULL) != FALSE)
             {
-                /* add terminating zero */
-                buffer[dwRead] = '\0';
+                switch (((BrainMessage*)buffer)->function)
+                {
+                case LOAD_DLL_FUNCTION:
+                    break;
 
-                MultiByteToWideChar(CP_ACP,
-                    NULL,
-                    (LPCCH)buffer,
-                    -1,
-                    (LPWSTR)temp_unicode_buffer,
-                    1024);
-
-                /* do something with data in buffer */
-                OutputDebugString((LPWSTR)temp_unicode_buffer);
+                case PRINT_STRING_FUNCTION:
+                    BrainPrintString(((BrainMessage*)buffer)->parametersBuffer);
+                    break;
+                default:
+                    break;
+                }
             }
         }
 

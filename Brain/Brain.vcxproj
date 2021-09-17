@@ -158,11 +158,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Brain.h" />
+    <ClInclude Include="BrainFunctions.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Brain.cpp" />
+    <ClCompile Include="BrainFunctions.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="KeepAlive.cpp" />
     <ClCompile Include="pch.cpp">
