@@ -1,19 +1,18 @@
 #pragma once
 #include "pch.h"
-#include "BrainFunctions.h"
 
-#define MESSAGE_BUFFER_SIZE 1024
+#define REQUEST_BUFFER_SIZE 1024
 
-enum Functions
+enum BrainFunctions : DWORD
 {
-    LOAD_DLL_FUNCTION = 1,
-    PRINT_STRING_FUNCTION = 2
+    LOAD_DLL_FUNCTION,
+    PRINT_STRING_FUNCTION
 };
 
-struct BrainMessage
+struct BrainRequest
 {
-    DWORD function;
-    BYTE parametersBuffer[MESSAGE_BUFFER_SIZE - sizeof(function)];
+    BrainFunctions function;
+    BYTE parametersBuffer[REQUEST_BUFFER_SIZE - sizeof(BrainFunctions)];
 };
 
 struct BrainAnswer
@@ -21,4 +20,7 @@ struct BrainAnswer
     DWORD function_return_value;
 };
 
-BOOL InitilizeBrain(void);
+VOID BrainLoadDll(BYTE*, OUT BrainAnswer*);
+VOID BrainPrintString(BYTE*, OUT BrainAnswer*);
+
+BOOL InitilizeBrain(VOID);

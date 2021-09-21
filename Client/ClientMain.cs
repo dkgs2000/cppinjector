@@ -1,25 +1,18 @@
 ﻿using System;
 using System.IO;
 using System.IO.Pipes;
-
+using Client.Brain;
 namespace Client
 {
     class ClientMain
     {
         static void Main(string[] args)
         {
-            var client = new NamedPipeClientStream("BrainPipe");
-            client.Connect();
-            StreamReader reader = new StreamReader(client);
-            StreamWriter writer = new StreamWriter(client);
-
+            BrainMessanger messanger = new BrainMessanger();
             while (true)
             {
-                string input = Console.ReadLine();
-                if (String.IsNullOrEmpty(input)) break;
-                writer.WriteLine(input);
-                writer.Flush();
-                Console.WriteLine(reader.ReadLine());
+                BrainRequest request = new BrainRequest(BrainFunctions.PrintStringFunction, System.Text.Encoding.ASCII.GetBytes("Test String"));
+                BrainAnswer answer = messanger.Request(request);
             }
         }
     }

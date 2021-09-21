@@ -1,6 +1,14 @@
 #include "pch.h"
+#include "Brain.h"
 
-DWORD BrainPrintString(BYTE* input_buffer)
+VOID BrainLoadDll(BYTE* input_buffer, OUT BrainAnswer* answer)
+{
+    answer->function_return_value = 0;
+    return;
+}
+
+
+VOID BrainPrintString(BYTE* input_buffer, OUT BrainAnswer* answer)
 {
     BYTE unicode_buffer[2048] = { 0 };
     MultiByteToWideChar(CP_ACP,
@@ -10,12 +18,8 @@ DWORD BrainPrintString(BYTE* input_buffer)
         (LPWSTR)unicode_buffer,
         1024);
 
-    /* do something with data in buffer */
     OutputDebugString((LPWSTR)unicode_buffer);
-    return 0;
-}
 
-DWORD BrainLoadDll(BYTE* input_buffer)
-{
-    return 0;
+    answer->function_return_value = 0;
+    return;
 }
