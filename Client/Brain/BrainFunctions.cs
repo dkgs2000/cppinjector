@@ -1,6 +1,6 @@
 ﻿namespace Client.Brain
 {
-    enum BrainFunctions
+    enum BrainFunctions : int
     {
         LoadDllFunction,
         PrintStringFunction

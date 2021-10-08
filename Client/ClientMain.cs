@@ -8,11 +8,18 @@ namespace Client
     {
         static void Main(string[] args)
         {
+            if (args is null)
+            {
+                throw new ArgumentNullException(nameof(args));
+            }
+
             BrainMessanger messanger = new BrainMessanger();
             while (true)
             {
-                BrainRequest request = new BrainRequest(BrainFunctions.PrintStringFunction, System.Text.Encoding.ASCII.GetBytes("Test String"));
-                BrainAnswer answer = messanger.Request(request);
+                BrainRequest request = new BrainRequest(BrainFunctions.PrintStringFunction, System.Text.Encoding.Unicode.GetBytes("Test String"));
+                BrainAnswer answer = messanger.SendRequest(request);
+                Console.WriteLine(answer.GetFunctionReturnValue().ToString());
+                Console.ReadLine();
             }
         }
     }

@@ -8,16 +8,21 @@ namespace Client.Brain
 {
     class BrainAnswer
     {
-        private int function_return_value;
+        private readonly int Function_return_value;
 
         public BrainAnswer(int function_return_value)
         {
-            this.function_return_value = function_return_value;
+            this.Function_return_value = function_return_value;
         }
 
         public BrainAnswer(byte[] input_buffer)
         {
-            this.function_return_value = BitConverter.ToInt32(input_buffer, 0);
+            this.Function_return_value = BitConverter.ToInt32(input_buffer, 0);
+        }
+
+        public int GetFunctionReturnValue()
+        {
+            return this.Function_return_value;
         }
     }
 }

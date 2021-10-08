@@ -3,7 +3,7 @@
 
 #define REQUEST_BUFFER_SIZE 1024
 
-enum BrainFunctions : DWORD
+enum class BrainFunctions : DWORD
 {
     LOAD_DLL_FUNCTION,
     PRINT_STRING_FUNCTION
@@ -17,7 +17,7 @@ struct BrainRequest
 
 struct BrainAnswer
 {
-    DWORD function_return_value;
+    INT function_return_value;
 };
 
 VOID BrainLoadDll(BYTE*, OUT BrainAnswer*);

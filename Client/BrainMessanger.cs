@@ -23,16 +23,15 @@ namespace Client
             writer = new BinaryWriter(client);
         }
 
-        public BrainAnswer Request(BrainRequest request)
+        public BrainAnswer SendRequest(BrainRequest request)
         {
-            byte[] request_buffer = new byte[BrainRequest.request_buffer_size];
-            BitConverter.GetBytes(request.function).CopyTo(request_buffer, 0);
+            byte[] request_buffer = new byte[1024];
+            BitConverter.GetBytes((int)request.Function).CopyTo(request_buffer, 0);
 
-            request.parametersBuffer.CopyTo(request_buffer, sizeof(int));
-
+            request.ParametersBuffer.CopyTo(request_buffer, sizeof(BrainFunctions));
             writer.Write(request_buffer);
             writer.Flush();
-            BrainAnswer answer = new BrainAnswer(reader.ReadBytes(sizeof(int)));
+            BrainAnswer answer = new BrainAnswer(reader.ReadBytes(sizeof(BrainFunctions)));
             return answer;
         }
     }

@@ -23,7 +23,8 @@ int main(int argc, char * argv[]) {
 
 	if (argc != 3)
 	{
-		printf_s("[-] Bad Args");
+		printf_s("[-] Bad Args\n");
+		printf_s("[*] Usage: \"injector.exe <process_name> <dll_path>\"");
 		return -1;
 	}
 
