@@ -12,7 +12,6 @@ VOID BrainLoadDll(LPBYTE input_buffer, OUT BrainAnswer* answer)
     return;
 }
 
-
 VOID BrainPrintString(LPBYTE input_buffer, OUT BrainAnswer* answer)
 {
     OutputDebugString((LPWSTR)input_buffer);

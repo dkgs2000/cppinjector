@@ -18,7 +18,7 @@ namespace Client
             {
                 BrainRequest request = new BrainRequest(BrainFunctions.PrintStringFunction, System.Text.Encoding.Unicode.GetBytes("Test String"));
                 BrainAnswer answer = messanger.SendRequest(request);
-                Console.WriteLine(answer.GetFunctionReturnValue().ToString());
+                Console.Write(answer.GetFunctionReturnValue().ToString());
                 Console.ReadLine();
             }
         }

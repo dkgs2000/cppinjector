@@ -10,6 +10,7 @@ namespace Client.Brain
     {
         public BrainFunctions Function { get; }
         public byte[] ParametersBuffer { get; }
+        public static readonly int brain_request_message_size = 1024;
 
         public BrainRequest(BrainFunctions function, byte[] parametersBuffer)
         {
