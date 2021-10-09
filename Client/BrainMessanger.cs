@@ -27,7 +27,7 @@ namespace Client
         {
             writer.Write(request.GetBrainRequestBuffer());
             writer.Flush();
-            BrainAnswer answer = new BrainAnswer(reader.ReadBytes(sizeof(BrainFunctions)));
+            BrainAnswer answer = new BrainAnswer(reader.ReadBytes(BrainAnswer.brain_answer_message_size));
             return answer;
         }
     }
