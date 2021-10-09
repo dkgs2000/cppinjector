@@ -25,11 +25,7 @@ namespace Client
 
         public BrainAnswer SendRequest(BrainRequest request)
         {
-            byte[] request_buffer = new byte[BrainRequest.brain_request_message_size];
-            BitConverter.GetBytes((int)request.Function).CopyTo(request_buffer, 0);
-
-            request.ParametersBuffer.CopyTo(request_buffer, sizeof(BrainFunctions));
-            writer.Write(request_buffer);
+            writer.Write(request.GetBrainRequestBuffer());
             writer.Flush();
             BrainAnswer answer = new BrainAnswer(reader.ReadBytes(sizeof(BrainFunctions)));
             return answer;

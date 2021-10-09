@@ -8,9 +8,9 @@ namespace Client.Brain
 {
     class BrainRequest
     {
-        public BrainFunctions Function { get; }
-        public byte[] ParametersBuffer { get; }
-        public static readonly int brain_request_message_size = 1024;
+        private BrainFunctions Function { get; }
+        private byte[] ParametersBuffer { get; }
+        private static readonly int brain_request_message_size = 1024;
 
         public BrainRequest(BrainFunctions function, byte[] parametersBuffer)
         {
@@ -22,6 +22,15 @@ namespace Client.Brain
         {
             this.Function = (BrainFunctions)BitConverter.ToInt32(input_buffer, 0);
             input_buffer.CopyTo(this.ParametersBuffer, sizeof(int));
+        }
+
+        public byte[] GetBrainRequestBuffer()
+        {
+            byte[] brain_request_buffer = new byte[BrainRequest.brain_request_message_size];
+            BitConverter.GetBytes((int)this.Function).CopyTo(brain_request_buffer, 0);
+            this.ParametersBuffer.CopyTo(brain_request_buffer, sizeof(BrainFunctions));
+
+            return brain_request_buffer;
         }
     }
 }
